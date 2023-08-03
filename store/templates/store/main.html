@@ -10,6 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+    <script type="text/javascript">
+        var user = "{{request.user}}"
+    </script>
 </head>
 
 <body>
@@ -49,6 +53,7 @@
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
 
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
 </body>
 
 </html>
