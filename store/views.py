@@ -1,10 +1,32 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.contrib.auth.forms import UserCreationForm
 import json
 import datetime
 
 from .models import *
-from .utils import cookieCart, cartData, guestOrder
+from .forms import RegisterUser
+from .utils import cartData, guestOrder
+
+
+def registerPage(request):
+    data = cartData(request)
+    cartItems = data["cartItems"]
+
+    form = RegisterUser()
+
+    if request.method == "POST":
+        form = RegisterUser(request.POST)
+        if form.is_valid():
+            form.save()
+
+    context = {"form": form, "cartItems": cartItems}
+    return render(request, "store/register.html", context)
+
+
+def loginPage(request):
+    context = {}
+    return render(request, "store/login.html", context)
 
 
 def store(request):
@@ -62,9 +84,7 @@ def updateItem(request):
 
     return JsonResponse("Item was added", safe=False)
 
-from django.views.decorators.csrf import csrf_exempt
-#solution for not authorized user
-@csrf_exempt
+
 def processOrder(request):
     transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
@@ -93,6 +113,5 @@ def processOrder(request):
             state=data["shipping"]["state"],
             zipcode=data["shipping"]["zipcode"],
         )
-    
-    return JsonResponse("Payment complete", safe=False)
 
+    return JsonResponse("Payment complete", safe=False)
