@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "store.apps.StoreConfig",
+
+    #paypal integration
+    "paypal.standard.ipn"
 ]
 
 MIDDLEWARE = [
@@ -129,3 +133,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "static/images")
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# setting to allow PayPal pop-up
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
+# PAYPAL SETTINGS
+PAYPAL_TEST = True
