@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.forms import UserCreationForm
 import json
@@ -19,6 +19,7 @@ def registerPage(request):
         form = RegisterUser(request.POST)
         if form.is_valid():
             form.save()
+            return redirect("login")
 
     context = {"form": form, "cartItems": cartItems}
     return render(request, "store/register.html", context)
