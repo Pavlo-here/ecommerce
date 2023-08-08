@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 import json
 import datetime
 
@@ -20,13 +19,19 @@ def registerPage(request):
     if request.method == "POST":
         form = RegisterUser(request.POST)
         if form.is_valid():
-            form.save()
+            new_user = form.save()
             user = form.cleaned_data.get("username")
+            Customer.objects.create(
+                user=new_user,
+                name=form.cleaned_data.get("username"),
+                email=form.cleaned_data.get("email"),
+            )
+
             messages.success(request, "Account was created for " + user)
 
             return redirect("login")
 
-    context = {"form": form, "cartItems": cartItems} 
+    context = {"form": form, "cartItems": cartItems}
     return render(request, "store/register.html", context)
 
 
@@ -44,7 +49,7 @@ def loginPage(request):
             login(request, user)
             return redirect("store")
         else:
-            messages.info(request, "Username or/and password is/are incorrect")
+            messages.info(request, "Username or password is incorrect")
 
     context = {"cartItems": cartItems}
     return render(request, "store/login.html", context)
