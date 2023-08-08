@@ -20,13 +20,16 @@
                                 <div class="form-group">
                                     <label for="inputName">Username</label>
                                     <br>
-                                    {{form.username}}
+                                    <input type="text", name="username", placeholder="Enter your name">
                                 </div>
                                 <div class="form-group">
                                     <label for="inputPassword3">Password</label>
                                     <br>
-                                    {{form.password1}}
+                                    <input type="text", name="password", placeholder="Enter your password">
                                 </div>
+                                {% for message in messages %}
+                                <p>{{message}}</p>
+                                {% endfor %}
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-success btn-lg float-right">Login</button>
                                 </div>
