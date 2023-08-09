@@ -1,10 +1,63 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 import json
 import datetime
 
 from .models import *
-from .utils import cookieCart, cartData, guestOrder
+from .forms import RegisterUser
+from .utils import cartData, guestOrder
+
+
+def registerPage(request):
+    data = cartData(request)
+    cartItems = data["cartItems"]
+
+    form = RegisterUser()
+
+    if request.method == "POST":
+        form = RegisterUser(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            user = form.cleaned_data.get("username")
+            Customer.objects.create(
+                user=new_user,
+                name=form.cleaned_data.get("username"),
+                email=form.cleaned_data.get("email"),
+            )
+
+            messages.success(request, "Account was created for " + user)
+
+            return redirect("login")
+
+    context = {"form": form, "cartItems": cartItems}
+    return render(request, "store/register.html", context)
+
+
+def loginPage(request):
+    data = cartData(request)
+    cartItems = data["cartItems"]
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect("store")
+        else:
+            messages.info(request, "Username or password is incorrect")
+
+    context = {"cartItems": cartItems}
+    return render(request, "store/login.html", context)
+
+
+def logoutPage(request):
+    logout(request)
+    return redirect("login")
 
 
 def store(request):
@@ -62,9 +115,7 @@ def updateItem(request):
 
     return JsonResponse("Item was added", safe=False)
 
-from django.views.decorators.csrf import csrf_exempt
-#solution for not authorized user
-@csrf_exempt
+
 def processOrder(request):
     transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
@@ -79,7 +130,7 @@ def processOrder(request):
     total = float(data["form"]["total"])
     order.transaction_id = transaction_id
 
-    if total == order.get_cart_total:
+    if total == float(order.get_cart_total):
         order.complete = True
 
     order.save()
@@ -93,6 +144,5 @@ def processOrder(request):
             state=data["shipping"]["state"],
             zipcode=data["shipping"]["zipcode"],
         )
-    
-    return JsonResponse("Payment complete", safe=False)
 
+    return JsonResponse("Payment submitted..", safe=False)
