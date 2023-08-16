@@ -1,3 +1,4 @@
 .vscode/
 venv/
 admin_login_password.txt
+datadump.json
