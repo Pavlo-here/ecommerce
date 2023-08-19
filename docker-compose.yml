@@ -1,0 +1,10 @@
+version: '3.9.17'
+
+services:
+  ecommerce:
+    build: 
+      context: .
+    ports:
+      - 8000:8000
+    volumes:
+      - ./ecommerce:/ecommerce
