@@ -6,3 +6,4 @@ tests/
 logic.py
 __pycache__/
 .idea/
+.env
