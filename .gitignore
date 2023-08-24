@@ -5,3 +5,4 @@ datadump.json
 tests/
 logic.py
 __pycache__/
+.idea/
