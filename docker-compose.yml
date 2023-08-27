@@ -2,25 +2,34 @@ version: "3.9"
 
 services:
   ecommerce_database:
-    image: postgres:15
+    image: postgres:latest
     container_name: ecommerce_database_container
+    networks:
+      - djangonetwork
     volumes:
-      - ~/.pg/pg_data/ecommerce:var/lib/postgresql/data
+      - ~/.pg/pg_data/ecommerce:/var/lib/postgresql/data
     env_file:
       - .env
-    
+#    environment:
+#      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+
   ecommerce_project:
     image: ecommerce_docker:latest
     container_name: ecommerce_project_container
     depends_on:
       - ecommerce_database
+    links: 
+      - ecommerce_database:ecommerce_database
+    networks:
+      - djangonetwork
     volumes:
       - static_volume:/ecommerce/static
       - media_volume:/ecommerce/static/images
     env_file:
       - .env
     command: >
-      bash -c "./manage.py collectstatic --noinput && ./manage.py migrate && python ./manage.py runserver 0.0.0.0:8000"
+      bash -c "python ./manage.py collectstatic --noinput && python ./manage.py migrate && python ./manage.py runserver"
 
   nginx:
     build:
@@ -33,10 +42,14 @@ services:
       - media_volume:/ecommerce/static/images
     depends_on:
       - ecommerce_project
+    networks:
+      - djangonetwork
     ports:
-      - "${NGINX_EXTERNAL_PORT}:80"
+      - "${NGINX_EXTERNAL_PORT}:8000"
   
-
+networks:
+      djangonetwork:
+          driver: bridge
 
 volumes:
    static_volume:
