@@ -8,13 +8,19 @@ COPY ./ecommerce /ecommerce
 WORKDIR /ecommerce
 EXPOSE 8000
 
-RUN pyhton -m venv /py && \
+RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
-    /py/bin/pip install -p requirements.txt && \
-    adduser --disabled-password --no-create-home ecommerce
+    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache --virtual .tmp-deps \ 
+        build-base postgresql-dev musl-dev && \
+    /py/bin/pip install -r /requirements.txt && \
+    apk del .tmp-deps && \
+    adduser --disabled-password --no-create-home pavlo && \
+    mkdir -p /vol/web/static && \
+    mkdir -p /vol/web/media && \
+    chown -R pavlo:pavlo /vol && \
+    chmod -R 755 /vol 
 
 ENV PATH="/py/bin:$PATH"
 
-USER ecommerce
-
-
+USER pavlo
