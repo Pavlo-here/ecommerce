@@ -27,12 +27,6 @@ SECRET_KEY = "django-insecure-4a06aw0hch4wvrt!mwtuz%1)(=2aip%fj7d%wb-7lokv=!49w2
 DEBUG = True
 
 ALLOWED_HOSTS = []
-ALLOWED_HOSTS.extend(
-    filter(
-        None,
-        os.environ.get("ALLOWED HOSTS", "").split(","),
-    )
-)
 
 
 # Application definition
@@ -91,17 +85,13 @@ WSGI_APPLICATION = "ecommerce.wsgi.application"
 # }
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ.get("DB_HOST"),
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASS"),
-        # 'NAME': 'ecommerce',
-        # 'USER': 'postgres',
-        # 'PASSWORD': 'admin',
-        # 'HOST': 'localhost',
-        # 'PORT': '5432',
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ecommerce',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

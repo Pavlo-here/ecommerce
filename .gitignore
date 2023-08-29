@@ -5,6 +5,3 @@ datadump.json
 tests/
 logic.py
 __pycache__/
-
-/data
-.env
