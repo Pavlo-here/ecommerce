@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(
     filter(
         None,
@@ -44,11 +44,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "store.apps.StoreConfig",
-
-    #paypal integration
-    "paypal.standard.ipn"
+    # paypal integration
+    "paypal.standard.ipn",
 ]
 
 MIDDLEWARE = [
@@ -93,19 +91,17 @@ WSGI_APPLICATION = "ecommerce.wsgi.application"
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST' : os.environ.get("DB_HOST"),
-        'NAME': os.environ.get("DB_NAME"),
-        'USER': os.environ.get("DB_USER"),
-        'PASSWORD': os.environ.get("DB_PASS"),
-        
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.environ.get("DB_HOST"),
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASS"),
         # 'NAME': 'ecommerce',
         # 'USER': 'postgres',
         # 'PASSWORD': 'admin',
         # 'HOST': 'localhost',
         # 'PORT': '5432',
-        
     }
 }
 
@@ -143,14 +139,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+# MEDIA_ROOT = os.path.join(BASE_DIR, "static/images")
 
-MEDIA_URL = "/images/"
+STATIC_URL = '/static/static/'
+MEDIA_URL = '/static/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "static/images")
-
+MEDIA_ROOT = '/vol/web/media'
+STATIC_ROOT = '/vol/web/static'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

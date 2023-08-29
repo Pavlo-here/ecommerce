@@ -1,7 +1,7 @@
-version: '3.9.17'
+version: '3.9'
 
 services:
-  app:
+  ecommerce:
     build:
       context: .
     command: >
@@ -11,7 +11,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - .:/ecommerce
+      - ./ecommerce:/ecommerce
       - ./data/web:/vol/web
 
     environment:
